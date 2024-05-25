@@ -3,15 +3,34 @@ import CoinsTable from "./components/templates/CoinsTable";
 
 function App() {
   const [coins, setCoins] = useState([]);
-  useEffect(() => {
-    fetch(
-      "https://assets.coincap.io/assets/icons/${coin.symbol.toLocaleLowerCase()}@2x.png"
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("data =>", data);
-        setCoins(data);
+  const getData = () => {
+    const req = new WebSocket("wss://ws.coincap.io/prices?assets=ALL");
+    req.onopen = () => {
+      req.send("request is send");
+    };
+    req.onmessage = (e) => {
+      console.log("e => ", JSON.parse(e.data));
+    };
+  };
+
+  const getAllCoins = () => {
+    fetch("https://api.coincap.io/v2/assets")
+      .then((result) => {
+        const res = result.json();
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log("err => ", err);
       });
+  };
+  useEffect(() => {
+    console.log("Loaded");
+    try {
+      getAllCoins();
+      // getData();
+    } catch (error) {
+      console.log("error => ", error);
+    }
   }, []);
   return (
     <>
