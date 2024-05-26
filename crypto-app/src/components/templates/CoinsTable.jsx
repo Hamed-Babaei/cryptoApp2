@@ -7,7 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-export default function CoinsTable() {
+export default function CoinsTable({ coins, loading }) {
   return (
     <div className="py-[3rem]">
       <h1 className="text-center text-3xl mb-5">Crypto App </h1>
@@ -26,21 +26,39 @@ export default function CoinsTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            <TableRow
-              key={1}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell align="left">{1}</TableCell>
-              <TableCell component="th" scope="row">
-                bit
-              </TableCell>
-              <TableCell align="center">$69,000</TableCell>
-              <TableCell align="center">$1.36t</TableCell>
-              <TableCell align="center">$68.000</TableCell>
-              <TableCell align="center">19.20m</TableCell>
-              <TableCell align="center">$4.25b</TableCell>
-              <TableCell align="center">0.09%</TableCell>
-            </TableRow>
+            {loading ? (
+              <div className="100vw">Loading...</div>
+            ) : (
+              coins.map((coin, index) => (
+                <TableRow
+                  key={index}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell align="left">{coin.rank}</TableCell>
+                  <TableCell component="th" scope="row">
+                    {coin.id}
+                  </TableCell>
+                  <TableCell align="center">
+                    ${parseFloat(coin.priceUsd).toFixed(5)}
+                  </TableCell>
+                  <TableCell align="center">
+                    ${parseFloat(coin.marketCapUsd).toFixed(5)}
+                  </TableCell>
+                  <TableCell align="center">
+                    {parseFloat(coin.vwap24Hr).toFixed(5)}m
+                  </TableCell>
+                  <TableCell align="center">
+                    ${parseFloat(coin.supply).toFixed(5)}b
+                  </TableCell>
+                  <TableCell align="center">
+                    {parseFloat(coin.volumeUsd24Hr).toFixed(5)}%
+                  </TableCell>
+                  <TableCell align="center">
+                    ${parseFloat(coin.changePercent24Hr).toFixed(5)}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>
